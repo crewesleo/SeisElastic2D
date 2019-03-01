@@ -3,7 +3,7 @@
 SPECFEM2D allows users to perform 2D and 2.5D (i.e., axisymmetric) simulations
 of acoustic, elastic, viscoelastic, and poroelastic seismic wave propagation.
 
-The the modified SPECFEM2D package can be used to calculate the sensitivity kernels
+The modified SPECFEM2D package can be used to calculate the sensitivity kernels
 for isotropic-, VTI-, TTI- and visco-elastic FWI with different model parameterizations.
 
 
