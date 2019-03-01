@@ -1,0 +1,29 @@
+FC = ifort
+FCFLAGS=-g
+FLAGS=-O3 -xSSSE3 -no-ip -fno-fnalias -fno-alias -vec-report1 -assume byterecl -sox -cpp  -traceback -w -ftz
+MPIFC=mpif90
+
+SRC_DIR=SRC
+LIB_seismo=$(SRC_DIR)/../lib/seismo.a
+SOURCES = misfit_adjoint misfit_adjoint_attenuation data_misfit sum_kernel optimization model_update mask_func
+BIN_DIR = ./bin
+MOD=seismo_parameters nrtype nrutil precision_module myMath_module myString_mod seism_uti_module corr_focus_mod
+MOD_DIR=./bin
+OBJ_DIR=./bin
+SOURCES_OBJ = $(patsubst %,$(OBJ_DIR)/%.o,$(SOURCES))
+MOD_OBJ = $(patsubst %,$(OBJ_DIR)/%.o,$(MOD))
+OBJ = $(MOD_OBJ)
+
+all: $(SOURCES)
+
+$(SOURCES) : % : $(SRC_DIR)/%.f90  $(MOD_OBJ) 
+	$(MPIFC) -DUSE_MPI -o $(BIN_DIR)/$*.exe $(FCFLAGS) $(FLAGS) $(SRC_DIR)/$*.f90 ${LIB_seismo} -I$(MOD_DIR) -J$(MOD_DIR) $(OBJ)
+
+$(MOD_OBJ): $(OBJ_DIR)/%.o : $(MOD_DIR)/%.f90
+	$(MPIFC) -DUSE_MPI -o $@ $(FCFLAGS) $(FLAGS) -I constants.mod  -c $(MOD_DIR)/$*.f90 
+
+clean:
+	rm -rf  $(OBJ_DIR)/*.o  $(MOD_DIR)/*.mod $(BIN_DIR)/*.exe
+
+
+

@@ -1,0 +1,26 @@
+FC = ifort
+FCFLAGS=-g
+FLAGS=-sox -cpp  -traceback -w -ftz  -O3 -xSSSE3 -no-ip -fno-fnalias -fno-alias -vec-report1
+
+
+LIB_seismo=seismo.a
+
+SRC_DIR= tests
+SOURCES = \
+  	test_adjoint_sources \
+        test_adjoint_sources_DD
+  
+BIN_DIR = tests
+
+
+all: $(SOURCES)  
+$(SOURCES) : % : $(SRC_DIR)/%.f90 
+	$(FC) -o $(BIN_DIR)/$*.exe $(FCLAGS) ${FLAGS} $(SRC_DIR)/$*.f90 ${LIB_seismo}  
+
+
+clean:
+	rm -rf  $(BIN_DIR)/*.exe
+
+
+
+

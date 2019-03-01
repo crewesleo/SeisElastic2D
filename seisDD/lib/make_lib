@@ -1,0 +1,35 @@
+FC = ifort
+FCFLAGS=-g
+FLAGS=-sox -cpp  -traceback -w -ftz  -O3 -xSSSE3 -no-ip -fno-fnalias -fno-alias -vec-report1
+
+LIBSRC_preprocess=\
+         ./src/constants.f90 \
+         ./src/m_hilbert_transform.f90 \
+         ./src/seismo_sub.f90 \
+         ./src/ma_sub2.f90 \
+         ./src/ma_sub.f90 \
+         ./src/adjoint_lib.f90 \
+         ./src/preprocess_lib.f90 \
+         ./src/optimization_lib.f90 \
+         ./src/split_string.f90 
+
+LIB_preprocess=seismo.a
+LIBOBJ_preprocess = ${LIBSRC_preprocess:%.f=${LIB_preprocess}(%.o)} ${LIBSRC_preprocess:%.f90=${LIB_preprocess}(%.o)} \
+         ${LIBSRC_preprocess:%.F=${LIB_preprocess}(%.o)}
+
+${LIB_preprocess}:${LIBOBJ_preprocess}
+
+SUFFIXES = .f .o .f90 .F .mod
+.SUFFIXES: $(SUFFIXES)
+
+.f.o:
+	$(FC) ${FCLAGS} ${FLAGS} -c -o $@ $<
+.F.o:
+	$(FC) ${FCLAGS} ${FLAGS} -c -o $@ $<
+.f90.o:
+	$(FC) ${FCLAGS} ${FLAGS} -c -o $@ $<
+
+clean:
+	rm -rf  ${LIB_preprocess} *.o *.mod OUTPUTS/*
+
+

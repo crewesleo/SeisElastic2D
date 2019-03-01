@@ -1,0 +1,30 @@
+OPT= -Wall -fbounds-check
+FC = gfortran
+CFLAGS= ${OPT}
+
+
+SRC_DIR=SRC
+LIB_seismo=$(SRC_DIR)/../lib/seismo.a
+SOURCES = misfit_adjoint misfit_adjoint_attenuation comp_misfit data_misfit model_misfit gradient model_update update_direction smooth_model
+BIN_DIR = ./bin
+MOD=seismo_parameters
+MOD_DIR=./bin
+OBJ_DIR=./bin
+SOURCES_OBJ = $(patsubst %,$(OBJ_DIR)/%.o,$(SOURCES))
+MOD_OBJ = $(patsubst %,$(OBJ_DIR)/%.o,$(MOD))
+OBJ = $(MOD_OBJ)
+
+
+all: $(SOURCES) 
+
+$(SOURCES) : % : $(SRC_DIR)/%.f90  $(MOD_OBJ) 
+	$(FC) -o $(BIN_DIR)/$*.exe $(CFLAGS) $(SRC_DIR)/$*.f90 ${LIB_seismo} -I$(MOD_DIR) -J$(MOD_DIR) $(OBJ)
+
+$(MOD_OBJ): $(OBJ_DIR)/%.o : $(MOD_DIR)/%.f90
+	$(FC) -o $@ $(CFLAGS) -c $(MOD_DIR)/$*.f90 
+
+clean:
+	rm -rf  $(OBJ_DIR)/*.o  $(MOD_DIR)/*.mod $(BIN_DIR)/*.exe
+
+
+
