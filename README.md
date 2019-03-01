@@ -5,6 +5,8 @@ This package is developed on parallel computing cluster with OpenMPI/MPI. It pro
 
 
 
+
+
 For downloading and using this package for your own studies, please cite the following reference publications:
 
 Pan, W. & Innanen, K., 2019. Parameterization analysis and field validation of VTI-elastic full-waveform inversion in a walk-away vertical seismic profile configuration, Geophysics. submitted.
