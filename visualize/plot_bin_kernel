@@ -1,0 +1,149 @@
+#!/usr/bin/env python
+## to plot binary kernel or model file
+## usage: plot_bin dirname parameters nproc
+## python version: Python 2.7.11
+
+import os
+import sys
+import numpy as np
+import pylab
+from matplotlib import pyplot, cm, colors
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+def isnonzero(a):
+    zmin = np.min(a, axis=0)
+    zmax = np.max(a, axis=0)
+    return np.flatnonzero(zmax-zmin)
+
+
+def stack(v):
+    s = np.hstack(v)
+    return s
+
+def read_fortran(filename):
+    """ Reads Fortran style binary data and returns a numpy array.
+    """
+    with open(filename, 'rb') as file:
+        # read size of record
+        file.seek(0)
+        n = np.fromfile(file, dtype='int32', count=1)[0]
+        # read contents of record
+        file.seek(4)
+        v = np.fromfile(file, dtype='float32')
+
+    return v[:-1]
+
+def uniquerows(a, sort_array=False, return_index=False):
+    """ Finds unique rows of numpy array
+    """
+    if sort_array:
+        if return_index:
+            sa, si = sortrows(a, return_index=True)
+        else:
+            sa = sortrows(a)
+    else:
+        sa, sj = sortrows(a, return_inverse=True)
+    ui = np.ones(len(sa), 'bool')
+    ui[1:] = (np.diff(sa, axis=0) != 0).any(axis=1)
+
+    if sort_array:
+        ua = sa[ui]
+        if return_index:
+            ui = si[ui]
+    else:
+        ua = a[ui[sj]]
+        if return_index:
+            ui = np.array(range(len(ui)))[ui[sj]]
+
+    if return_index:
+        return ua, ui
+    else:
+        return ua
+
+def meshplot(x, y, z, levels=None):
+    """ Plots values on 2D unstructured mesh
+    """
+
+    r = (np.max(x) - np.min(x))/(np.max(y) - np.min(y))
+    rx = r/np.sqrt(1 + r**2)
+    ry = 1/np.sqrt(1 + r**2)
+
+#    f = pylab.figure(figsize=(15*rx, 15*ry))
+    f = pylab.figure(figsize=(8, 8))
+    p = pylab.tricontourf(x, y, z, 101, levels=levels,extend='both')
+#    p = pylab.tricontour(x, y, z,50,levels=levels)
+    pylab.axis('image')
+    return f, p
+
+
+if __name__ == '__main__':
+    """ Plots data on 2-D unstructured mesh
+
+    Reads mesh coordinates from first two columns of text file and data from
+    subsequent columns, computes Delaunay triangulation, and plots data
+    using matplotlib.
+
+    In particular, can be used to plot kernels and models output from SPECFEM2D
+    on unstructured GLL bases.
+    """
+    dirname = sys.argv[1]
+    parameters = sys.argv[2]
+    nproc=int(sys.argv[3])
+#    parameters2=
+    print (dirname,parameters, nproc)
+
+    x = []
+    z = []
+    for par in parameters.split(','):
+        v = []
+        v_beta=[]
+        v_rhop=[]
+        temp = []
+        min = 1000000
+        max = -1000000
+        for iproc in range(0,nproc):
+
+            filename = os.path.join(dirname, 'proc%06d_x.bin' % iproc)
+            x += [read_fortran(filename)]
+            filename = os.path.join(dirname, 'proc%06d_z.bin' % iproc)
+            z += [read_fortran(filename)]
+
+            filename = os.path.join(dirname, 'proc%06d_%s.bin' % (iproc, par))
+            print(filename)
+            temp = [read_fortran(filename)]
+            v+= temp
+
+        if ('kernel' in par):
+  #          v=np.correlate(stack(v),stack(v),mode='same')
+  #          v=stack(v)*stack(v)
+            levels=np.linspace(1*np.min((stack(v))),1*np.max((stack(v))),101)
+#            levels=np.linspace(-np.max(abs(stack(v))),np.max(abs(stack(v))),100)
+            ## levels=np.linspace(-2e-9,2e-9,101)
+        else:
+           levels=np.linspace(1.0*np.min((stack(v))),1.0*np.max((stack(v))),101)
+#            levels=np.linspace(1700,2650,101)
+        _, p = meshplot(stack(x)/1000,stack(z)/1000,stack(v),levels=levels)
+	#pylab.subplot(2,1,1)
+        pylab.gca().invert_yaxis()
+	ax=pylab.gca()
+	#im=ax.imshow(np.arange(100).reshape((10,10)))
+        print(np.min(stack(v)), np.max(stack(v)))
+        #pylab.title(par)
+        pylab.xlabel('Distance (km)')
+        pylab.rc('font',family='arial',size=15)
+
+	pylab.ylabel('Depth (km)');
+#	pylab.grid(True)
+#        p.set_cmap(pylab.cm.PuOr)
+	p.set_cmap(pylab.cm.RdBu_r)
+#        p.set_cmap(pylab.cm.spectral)
+	divider=make_axes_locatable(ax)
+	cax=divider.append_axes("right",size="1%",pad=0.05)
+        pbar = pylab.colorbar(p,cax=cax)
+	pbar.set_label('m/s',rotation=270)
+#	pylab.savefig('Kernel_kappa.eps',format='eps',dpi=800);
+    #pylab.figure(figsize=(2,2))
+#    fig = pyplot.gcf()
+#    fig.set_size_inches(5,5)
+	#pylab.savefig(par,dpi=400,format='eps');
+    pylab.show()

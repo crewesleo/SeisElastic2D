@@ -1,0 +1,154 @@
+#!/usr/bin/env python
+## to plot binary kernel or model file
+## usage: plot_bin dirname parameters nproc
+## python version: Python 2.7.11
+
+import os
+import sys
+import numpy as np
+import pylab
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib import pyplot, cm, colors
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import matplotlib.gridspec as gridspec
+import scipy.io
+from matplotlib.colors import LinearSegmentedColormap
+
+def isnonzero(a):
+    zmin = np.min(a, axis=0)
+    zmax = np.max(a, axis=0)
+    return np.flatnonzero(zmax-zmin)
+
+
+def stack(v):
+    s = np.hstack(v)
+    return s
+
+def read_fortran(filename):
+    """ Reads Fortran style binary data and returns a numpy array.
+    """
+    with open(filename, 'rb') as file:
+        # read size of record
+        file.seek(0)
+        n = np.fromfile(file, dtype='int32', count=1)[0]
+        # read contents of record
+        file.seek(4)
+        v = np.fromfile(file, dtype='float32')
+
+    return v[:-1]
+
+def uniquerows(a, sort_array=False, return_index=False):
+    """ Finds unique rows of numpy array
+    """
+    if sort_array:
+        if return_index:
+            sa, si = sortrows(a, return_index=True)
+        else:
+            sa = sortrows(a)
+    else:
+        sa, sj = sortrows(a, return_inverse=True)
+    ui = np.ones(len(sa), 'bool')
+    ui[1:] = (np.diff(sa, axis=0) != 0).any(axis=1)
+
+    if sort_array:
+        ua = sa[ui]
+        if return_index:
+            ui = si[ui]
+    else:
+        ua = a[ui[sj]]
+        if return_index:
+            ui = np.array(range(len(ui)))[ui[sj]]
+
+    if return_index:
+        return ua, ui
+    else:
+        return ua
+
+def meshplot(x, y, z, levels=None):
+    """ Plots values on 2D unstructured mesh
+    """
+
+    r = (np.max(x) - np.min(x))/(np.max(y) - np.min(y))
+    rx = r/np.sqrt(1 + r**2)
+    ry = 1/np.sqrt(1 + r**2)
+
+#    f = pylab.figure(figsize=(15*rx, 15*ry))
+    f = pylab.figure(figsize=(8, 8))
+    p = pylab.tricontourf(x, y, z, 101, levels=levels,extend='both')
+#    p = pylab.tricontour(x, y, z,50,levels=levels)
+    pylab.axis('image')
+    return f, p
+
+
+if __name__ == '__main__':
+    """ Plots data on 2-D unstructured mesh
+
+    Reads mesh coordinates from first two columns of text file and data from
+    subsequent columns, computes Delaunay triangulation, and plots data
+    using matplotlib.
+
+    In particular, can be used to plot kernels and models output from SPECFEM2D
+    on unstructured GLL bases.
+    """
+    dirname = sys.argv[1]
+    parameters = sys.argv[2]
+    nproc=int(sys.argv[3])
+#    parameters2=
+    print (dirname,parameters, nproc)
+
+    x = []
+    z = []
+    for par in parameters.split(','):
+        v = []
+        v_beta=[]
+        v_rhop=[]
+        temp = []
+        min = 1000000
+        max = -1000000
+        for iproc in range(0,nproc):
+
+            filename = os.path.join(dirname, 'proc%06d_x.bin' % iproc)
+            x += [read_fortran(filename)]
+            filename = os.path.join(dirname, 'proc%06d_z.bin' % iproc)
+            z += [read_fortran(filename)]
+
+            filename = os.path.join(dirname, 'proc%06d_%s.bin' % (iproc, par))
+            print(filename)
+            temp = [read_fortran(filename)]
+            v+= temp
+
+        if ('kernel' in par):
+  #          v=np.correlate(stack(v),stack(v),mode='same')
+  #          v=stack(v)*stack(v)
+            levels=np.linspace(-np.max(abs(stack(v))),np.max(abs(stack(v))),101)
+#            levels=np.linspace(-np.max(abs(stack(v))),np.max(abs(stack(v))),101)
+            ## levels=np.linspace(-2e-9,2e-9,101)
+        else:
+            levels=np.linspace(np.min((stack(v)))/1000,np.max((stack(v)))/1000,101)
+#            levels=np.linspace(1700,2650,101)
+
+    f = pylab.figure(figsize=(6, 2.5))
+    gs = gridspec.GridSpec(1, 1)
+    gs.update(wspace=0.15,hspace=0.15)
+    ax6=pylab.subplot(gs[0])
+    p=pylab.tricontourf(stack(x)/1000,stack(z)/1000, stack(v)/1000,levels=levels,extend='both')
+    p.set_cmap(pylab.cm.RdBu_r)
+    pylab.ylabel('Depth (km)',fontsize=14)
+    pylab.xlabel('Distance (km)',fontsize=14)
+    pylab.rc('font',family='arial',size=14)
+    pylab.axis([0,6.0,2.5,0])
+    ax=pylab.gca()
+    axins = inset_axes(ax,width="1.5%",height="100%", loc=3,bbox_to_anchor=(1.02, 0., 1, 1),bbox_transform=ax.transAxes,borderpad=0,)
+    p.set_cmap(pylab.cm.RdBu_r)
+    divider=make_axes_locatable(ax)
+    xlabel = ax6.set_xlabel('Distance (km)',size=14)
+    pbar = pylab.colorbar(p,cax=axins,format='%.2f')
+    pbar.ax.set_ylabel('km/s', labelpad=-30, y='-0.08', rotation=0)
+    #ax.text(-.1, 1, 'a)',horizontalalignment='left',verticalalignment='top',transform=ax.transAxes,fontdict=titlefont)
+    ax.axis('tight')    
+    dir='/turquoise/users/wenyongp/seisDD/EXAMPLES/Soda_lake_2D/submit_job/Figures/'
+    #dir.join(par)
+    pylab.savefig(dir+par+'.png',dpi=400,format='png',bbox_extra_artists=[xlabel], bbox_inches='tight');
+    pylab.savefig(dir+par+'.eps',dpi=400,format='eps',bbox_extra_artists=[xlabel], bbox_inches='tight');
+    pylab.show()
