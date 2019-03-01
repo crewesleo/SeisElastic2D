@@ -12,7 +12,7 @@ figure(1);
 plot(tw,w);hold on;
 
 
-fid=fopen('source_wavelet_min_12_correct.dat','w');
+fid=fopen('source_wavelet.dat','w');
 for ii=1:length(w)
 fprintf(fid,'%3.6f	%3.6f',tw(ii,1), w(ii,1));
 fprintf(fid,'\n');
