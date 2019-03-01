@@ -24,9 +24,6 @@ theta=Theta_true_small(1:2:end,750:3:1125);
 theta=theta/2;
 [nz,nx]=size(Vp);
 
-epsilon=epsilon+0.02;
-delta=delta+0.02; 
-
 Rho=gaussian_smoother(Rho,1:nx,1:nz,10);
 
 % unroatated elastic constants
