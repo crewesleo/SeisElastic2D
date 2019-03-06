@@ -7,7 +7,7 @@ This package is developed on parallel computing cluster with OpenMPI/MPI. It pro
 
 
 
-For downloading and using this package for your own studies, please cite the following reference publications:
+For downloading and using this package for your own studies, please cite the following publications:
 
 Pan, W., Innanen, K., Geng Y. & Li, J., 2019. Interparameter tradeoff quantification for isotropic-elastic full-waveform inversion with various model parameterizations, Geophysics. 84, R185-R206.
 
