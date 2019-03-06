@@ -20,3 +20,7 @@ Yuan, O. Y., Simons, F. J. & Tromp, J., 2016. Double-difference adjoint seismic 
 Yuan, O. Y., Simons, F. J. & Bozdag, E., 2015. Multiscale adjoint waveform tomography for surface and body waves, Geophysics. 80, R281-R302.
 
 Yuan, O. Y. & Simons, F. J., 2014. Multiscale adjoint waveform-difference tomography using wavelets, Geophysics. 79, WA79-WA95.
+
+
+
+For any concern about this package, please feel free to contact Wenyong Pan by davincicugb@gmail.com
