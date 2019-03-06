@@ -9,10 +9,6 @@ This package is developed on parallel computing cluster with OpenMPI/MPI. It pro
 
 For downloading and using this package for your own studies, please cite the following reference publications:
 
-Pan, W. & Innanen, K., 2019. Parameterization analysis and field validation of VTI-elastic full-waveform inversion in a walk-away vertical seismic profile configuration, Geophysics. submitted.
-
-Pan, W. & Innanen, K., 2019. Amplitude-based misfit functions in viscoelastic full-waveform inversion applied to walk-away vertical seismic profile data, Geophysics. submitted.
-
 Pan, W., Innanen, K., Geng Y. & Li, J., 2019. Interparameter tradeoff quantification for isotropic-elastic full-waveform inversion with various model parameterizations, Geophysics. 84, R185-R206.
 
 Pan, W., Geng, Y. & Innanen, A. K., 2018. Interparameter tradeoff quantification and reduction in isotropic-elastic full-waveform inversion: synthetic experiments and Hussar land dataset application, Geophysical Journal International. 213, 1305-1333.
