@@ -421,21 +421,21 @@
                             (hti_alphal_global(iglob)*hti_alphal_global(iglob)-&
                             hti_betal_global(iglob)*hti_betal_global(iglob))**2)
 
-              tti_rhopl_global(iglob)    = rhoext(i,j,ispec)
-              tti_alphal_global(iglob)   = SQRT(c33uext(i,j,ispec)/rhoext(i,j,ispec))
-              tti_betal_global(iglob)    = SQRT(c55uext(i,j,ispec)/rhoext(i,j,ispec))
-              tti_deltal_global(iglob) = (tti_c13ul_global(iglob) + tti_c55ul_global(iglob))**2/(2._CUSTOM_REAL*&
-                            tti_c33ul_global(iglob)*(tti_c33ul_global(iglob)-tti_c55ul_global(iglob)))-&
-                            (tti_c33ul_global(iglob) - tti_c55ul_global(iglob))/(2._CUSTOM_REAL * tti_c33ul_global(iglob))
+              !tti_rhopl_global(iglob)    = rhoext(i,j,ispec)
+              !tti_alphal_global(iglob)   = SQRT(c33uext(i,j,ispec)/rhoext(i,j,ispec))
+              !tti_betal_global(iglob)    = SQRT(c55uext(i,j,ispec)/rhoext(i,j,ispec))
+              !tti_deltal_global(iglob) = (tti_c13ul_global(iglob) + tti_c55ul_global(iglob))**2/(2._CUSTOM_REAL*&
+              !              tti_c33ul_global(iglob)*(tti_c33ul_global(iglob)-tti_c55ul_global(iglob)))-&
+              !              (tti_c33ul_global(iglob) - tti_c55ul_global(iglob))/(2._CUSTOM_REAL * tti_c33ul_global(iglob))
 
-              tti_epsilonl_global(iglob)   = (tti_c11ul_global(iglob)-tti_c33ul_global(iglob))/&
-                            (2._CUSTOM_REAL * tti_c33ul_global(iglob))
+              !tti_epsilonl_global(iglob)   = (tti_c11ul_global(iglob)-tti_c33ul_global(iglob))/&
+              !              (2._CUSTOM_REAL * tti_c33ul_global(iglob))
               
-              tti_coeffl_global(nglob) = SQRT(2._CUSTOM_REAL*tti_deltal_global(iglob)*tti_alphal_global(iglob)*&
-                            tti_alphal_global(iglob)*(tti_alphal_global(iglob)*tti_alphal_global(iglob)-&
-                            tti_betal_global(iglob)*tti_betal_global(iglob))+&
-                            (tti_alphal_global(iglob)*tti_alphal_global(iglob)-&
-                            tti_betal_global(iglob)*tti_betal_global(iglob))**2)
+              !tti_coeffl_global(nglob) = SQRT(2._CUSTOM_REAL*tti_deltal_global(iglob)*tti_alphal_global(iglob)*&
+              !              tti_alphal_global(iglob)*(tti_alphal_global(iglob)*tti_alphal_global(iglob)-&
+              !              tti_betal_global(iglob)*tti_betal_global(iglob))+&
+              !              (tti_alphal_global(iglob)*tti_alphal_global(iglob)-&
+              !              tti_betal_global(iglob)*tti_betal_global(iglob))**2)
 
               !!! Kernels in TTI unrotated elastic-constant parameterization
               !tti_ecu_c11_k(iglob) = tti_ec_c11_k(iglob)*tti_c11ul_global(iglob)*m1ext(i,j,ispec)/(tti_c11l_global(iglob) * 8) + &
@@ -888,39 +888,39 @@
 
              !!! TTITH model parameterization kernels
              ! tti_thom_rhop_kl(i,j,ispec) = tti_ecu_rho_kl(i,j,ispec)
-             tti_thom_rhop_kl(i,j,ispec) = tti_ecu_rho_kl(i,j,ispec) + tti_alphal_global(iglob)*tti_alphal_global(iglob)*&
-               tti_ecu_c33_kl(i,j,ispec) + tti_betal_global(iglob)*tti_betal_global(iglob)*tti_ecu_c55_kl(i,j,ispec) + &
-               tti_coeffl_global(nglob)*tti_ecu_c13_kl(i,j,ispec)
+             !tti_thom_rhop_kl(i,j,ispec) = tti_ecu_rho_kl(i,j,ispec) + tti_alphal_global(iglob)*tti_alphal_global(iglob)*&
+             !  tti_ecu_c33_kl(i,j,ispec) + tti_betal_global(iglob)*tti_betal_global(iglob)*tti_ecu_c55_kl(i,j,ispec) + &
+             !  tti_coeffl_global(nglob)*tti_ecu_c13_kl(i,j,ispec)
 
-             tti_thom_alpha_kl(i,j,ispec) = 2._CUSTOM_REAL*tti_ecu_c33_kl(i,j,ispec) + 2._CUSTOM_REAL*tti_ecu_c11_kl(i,j,ispec)+&
-               2._CUSTOM_REAL*tti_alphal_global(iglob)*tti_alphal_global(iglob)*tti_alphal_global(iglob)*tti_alphal_global(iglob)*&
-               (2._CUSTOM_REAL*tti_deltal_global(iglob)+1._CUSTOM_REAL)*tti_ecu_c13_kl(i,j,ispec)/(tti_coeffl_global(iglob)*&
-               (tti_coeffl_global(iglob)-tti_betal_global(iglob)**2))-2._CUSTOM_REAL*tti_alphal_global(iglob)*tti_alphal_global(iglob)*&
-               tti_betal_global(iglob)*tti_betal_global(iglob)*(tti_deltal_global(iglob)+1._CUSTOM_REAL)*tti_ecu_c13_kl(i,j,ispec)/&
-               (tti_coeffl_global(iglob)*(tti_coeffl_global(iglob)-tti_betal_global(iglob)**2))
+             !tti_thom_alpha_kl(i,j,ispec) = 2._CUSTOM_REAL*tti_ecu_c33_kl(i,j,ispec) + 2._CUSTOM_REAL*tti_ecu_c11_kl(i,j,ispec)+&
+             !  2._CUSTOM_REAL*tti_alphal_global(iglob)*tti_alphal_global(iglob)*tti_alphal_global(iglob)*tti_alphal_global(iglob)*&
+             !  (2._CUSTOM_REAL*tti_deltal_global(iglob)+1._CUSTOM_REAL)*tti_ecu_c13_kl(i,j,ispec)/(tti_coeffl_global(iglob)*&
+             !  (tti_coeffl_global(iglob)-tti_betal_global(iglob)**2))-2._CUSTOM_REAL*tti_alphal_global(iglob)*tti_alphal_global(iglob)*&
+             !  tti_betal_global(iglob)*tti_betal_global(iglob)*(tti_deltal_global(iglob)+1._CUSTOM_REAL)*tti_ecu_c13_kl(i,j,ispec)/&
+             !  (tti_coeffl_global(iglob)*(tti_coeffl_global(iglob)-tti_betal_global(iglob)**2))
 
-             tti_thom_beta_kl(i,j,ispec) = 2._CUSTOM_REAL*tti_ecu_c55_kl(i,j,ispec) - 2._CUSTOM_REAL * tti_betal_global(iglob) * &
-               tti_betal_global(iglob)*(tti_alphal_global(iglob)*tti_alphal_global(iglob)*tti_deltal_global(iglob)-&
-               tti_betal_global(iglob)**2 + tti_alphal_global(iglob)**2)*tti_ecu_c13_kl(i,j,ispec)/&
-               (tti_coeffl_global(iglob)*(tti_coeffl_global(iglob)-tti_betal_global(iglob)**2)) - &
-               2._CUSTOM_REAL*tti_betal_global(iglob)*tti_betal_global(iglob)*tti_ecu_c13_kl(i,j,ispec)/&
-               (tti_coeffl_global(iglob)-tti_betal_global(iglob)**2)
+             !tti_thom_beta_kl(i,j,ispec) = 2._CUSTOM_REAL*tti_ecu_c55_kl(i,j,ispec) - 2._CUSTOM_REAL * tti_betal_global(iglob) * &
+             !  tti_betal_global(iglob)*(tti_alphal_global(iglob)*tti_alphal_global(iglob)*tti_deltal_global(iglob)-&
+             !  tti_betal_global(iglob)**2 + tti_alphal_global(iglob)**2)*tti_ecu_c13_kl(i,j,ispec)/&
+             !  (tti_coeffl_global(iglob)*(tti_coeffl_global(iglob)-tti_betal_global(iglob)**2)) - &
+             !  2._CUSTOM_REAL*tti_betal_global(iglob)*tti_betal_global(iglob)*tti_ecu_c13_kl(i,j,ispec)/&
+             !  (tti_coeffl_global(iglob)-tti_betal_global(iglob)**2)
 
-             tti_thom_epsilon_kl(i,j,ispec) = 2._CUSTOM_REAL*tti_epsilonl_global(iglob) * tti_ecu_c11_kl(i,j,ispec)/&
-               (2._CUSTOM_REAL*tti_epsilonl_global(iglob) + 1._CUSTOM_REAL)
+             !tti_thom_epsilon_kl(i,j,ispec) = 2._CUSTOM_REAL*tti_epsilonl_global(iglob) * tti_ecu_c11_kl(i,j,ispec)/&
+             !  (2._CUSTOM_REAL*tti_epsilonl_global(iglob) + 1._CUSTOM_REAL)
 
-             tti_thom_delta_kl(i,j,ispec) = tti_deltal_global(iglob) * tti_alphal_global(iglob)*tti_alphal_global(iglob) * &
-               (tti_alphal_global(iglob)**2 - tti_betal_global(iglob)**2) * tti_ecu_c13_kl(i,j,ispec) / &
-               (tti_coeffl_global(iglob)*(tti_coeffl_global(iglob)-tti_betal_global(iglob)**2))
+             !tti_thom_delta_kl(i,j,ispec) = tti_deltal_global(iglob) * tti_alphal_global(iglob)*tti_alphal_global(iglob) * &
+             !  (tti_alphal_global(iglob)**2 - tti_betal_global(iglob)**2) * tti_ecu_c13_kl(i,j,ispec) / &
+             !  (tti_coeffl_global(iglob)*(tti_coeffl_global(iglob)-tti_betal_global(iglob)**2))
 
-             tti_thom_theta_kl(i,j,ispec) = tti_ecu_theta_kl(i,j,ispec)
+             !tti_thom_theta_kl(i,j,ispec) = tti_ecu_theta_kl(i,j,ispec)
 
-             pdh_tti_thom_alpha(i,j,ispec) = pdh_hti_thom_alpha(i,j,ispec)
-             pdh_tti_thom_beta(i,j,ispec) = pdh_hti_thom_beta(i,j,ispec)
-             pdh_tti_thom_epsilon(i,j,ispec) = pdh_hti_thom_epsilon(i,j,ispec)
-             pdh_tti_thom_delta(i,j,ispec) = pdh_hti_thom_delta(i,j,ispec)
-             pdh_tti_thom_rhop(i,j,ispec) = pdh_hti_thom_rhop(i,j,ispec)
-             pdh_tti_thom_theta(i,j,ispec) = pdh_tti_ecu_theta(i,j,ispec)
+             !pdh_tti_thom_alpha(i,j,ispec) = pdh_hti_thom_alpha(i,j,ispec)
+             !pdh_tti_thom_beta(i,j,ispec) = pdh_hti_thom_beta(i,j,ispec)
+             !pdh_tti_thom_epsilon(i,j,ispec) = pdh_hti_thom_epsilon(i,j,ispec)
+             !pdh_tti_thom_delta(i,j,ispec) = pdh_hti_thom_delta(i,j,ispec)
+             !pdh_tti_thom_rhop(i,j,ispec) = pdh_hti_thom_rhop(i,j,ispec)
+             !pdh_tti_thom_theta(i,j,ispec) = pdh_tti_ecu_theta(i,j,ispec)
             endif 
             !tti_ecu_c11_kl(i,j,ispec) = &
             !   tti_ec_c11_kl(i,j,ispec) * tti_c11ul_global(iglob) * m1l_global(iglob)/(tti_c11l_global(iglob) * 8._CUSTOM_REAL) + &
