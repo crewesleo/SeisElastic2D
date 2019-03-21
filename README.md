@@ -23,4 +23,4 @@ Yuan, O. Y. & Simons, F. J., 2014. Multiscale adjoint waveform-difference tomogr
 
 
 
-For any concern about this package, please feel free to contact Wenyong Pan by davincicugb@gmail.com
+For any concern about this package, please feel free to contact Wenyong Pan via davincicugb@gmail.com
